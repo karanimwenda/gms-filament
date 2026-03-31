@@ -3,9 +3,12 @@
 namespace App\Filament\Resources\Vehicles\Schemas;
 
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
+use Illuminate\Database\Eloquent\Builder;
 
 class VehicleForm
 {
@@ -14,13 +17,27 @@ class VehicleForm
         return $schema
             ->components([
                 Select::make('customer_id')
-                    ->relationship('customer', 'id')
-                    ->required(),
+                    ->relationship('customer', 'email')
+                    ->searchable()
+                    ->required()
+                    ->columnSpanFull(),
                 Select::make('vehicle_make_id')
+                    ->live()
                     ->relationship('vehicleMake', 'name')
-                    ->required(),
+                    ->searchable()
+                    ->preload()
+                    ->required()
+                    ->afterStateUpdated(function (Set $set) {
+                        $set('vehicle_model_id', '');
+                    }),
                 Select::make('vehicle_model_id')
-                    ->relationship('vehicleModel', 'name')
+                    ->relationship(
+                        name: 'vehicleModel',
+                        titleAttribute: 'name',
+                        modifyQueryUsing: fn (Builder $query, Get $get) => $query?->where('vehicle_make_id', '=', $get('vehicle_make_id') ?? -1)
+                    )
+                    ->searchable()
+                    ->preload()
                     ->required(),
                 Select::make('fuel_type_id')
                     ->relationship('fuelType', 'name')

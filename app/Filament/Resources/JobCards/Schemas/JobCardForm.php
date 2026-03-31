@@ -4,8 +4,8 @@ namespace App\Filament\Resources\JobCards\Schemas;
 
 use App\Enums\JobCardStatus;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
 
 class JobCardForm
@@ -15,10 +15,11 @@ class JobCardForm
         return $schema
             ->components([
                 Select::make('customer_id')
-                    ->relationship('customer', 'id')
+                    ->relationship('customer', 'email')
+                    ->searchable()
                     ->required(),
                 Select::make('vehicle_id')
-                    ->relationship('vehicle', 'id')
+                    ->relationship('vehicle', 'number_plate')
                     ->required(),
                 TextInput::make('total')
                     ->required()

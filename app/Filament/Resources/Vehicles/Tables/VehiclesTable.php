@@ -14,7 +14,7 @@ class VehiclesTable
     {
         return $table
             ->columns([
-                TextColumn::make('customer.id')
+                TextColumn::make('customer.email')
                     ->searchable(),
                 TextColumn::make('vehicleMake.name')
                     ->searchable(),
@@ -26,19 +26,25 @@ class VehiclesTable
                     ->searchable(),
                 TextColumn::make('number_of_gears')
                     ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('year_of_manufacturing')
-                    ->numeric()
-                    ->sortable(),
+                    ->label('Year')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('odometer_reading')
                     ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('gearbox_number')
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('engine_number')
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('chassis_number')
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

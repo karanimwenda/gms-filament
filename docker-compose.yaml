@@ -1,0 +1,34 @@
+name: "gms_filament"
+
+services:
+  # We need to run the FPM container for our application
+  gms.filament.fpm:
+    build:
+      context: .
+      target: fpm_server
+    # We can override any env values here.
+    # By default the .env in the project root will be loaded as the environment for all containers
+    env_file:
+      - .env.production
+    restart: unless-stopped
+
+    post_start:
+      - command: php /opt/apps/www/artisan migrate:fresh --force --seed
+        user: www-data
+      - command: php /opt/apps/www/artisan optimize
+        user: www-data
+
+  # Run the web server container for static content, and proxying to our FPM container
+  gms.filament.web:
+    build:
+      context: .
+      target: nginx_server
+    # Expose our application port (80) through a port on our local machine (8080)
+    ports:
+      - "4080:80"
+    environment:
+      # We need to pass in the new FPM hst as the name of the fpm container on port 9000
+      FPM_HOST: "gms.filament.fpm:9000"
+    depends_on:
+      - "gms.filament.fpm"
+    restart: unless-stopped

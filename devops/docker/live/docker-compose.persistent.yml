@@ -1,0 +1,99 @@
+name: "choro_live_persistent"
+
+volumes:
+  chorodb-data:
+  chororedis-data:
+
+services:
+  choro.db:
+    image: mariadb:latest
+    volumes:
+      - chorodb-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: "db_pass"
+      MYSQL_USER: "db_user"
+      MYSQL_PASSWORD: "db_pass"
+      MYSQL_DATABASE: "live_db"
+    healthcheck:
+      test: ["CMD", "mariadb-admin", "ping", "-h", "localhost"]
+      start_period: 10s
+      interval: 5s
+      timeout: 10s
+      retries: 12 # wait up to 2 min (120s) before giving up
+    restart: unless-stopped
+    networks:
+      - choro-network
+
+  choro.phpmyadmin:
+    image: phpmyadmin
+    ports:
+      - 3070:80
+    environment:
+      PMA_HOST: "choro.db"
+      PMA_PASSWORD: "db_pass"
+    restart: unless-stopped
+    networks:
+      - choro-network
+
+  choro.redis:
+    image: redis:latest
+    volumes:
+      - chororedis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      start_period: 10s
+      interval: 5s
+      timeout: 10s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - choro-network
+
+  # ===================================================================================================
+  # Observability
+  # ===================================================================================================
+  # Log aggregation
+  # TODO: Check on retention policy
+  loki:
+    image: grafana/loki:latest
+    ports:
+      - 3100:3100
+    command: -config.file=/etc/loki/local-config.yaml
+    restart: unless-stopped
+    networks:
+      - choro-network
+
+  # Log collection
+  promtail:
+    image: grafana/promtail:latest
+    container_name: promtail
+    volumes:
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ../observability/promtail.yaml:/etc/promtail/promtail-config.yaml
+    command: -config.file=/etc/promtail/promtail-config.yaml
+    depends_on:
+      - loki
+    restart: unless-stopped
+    networks:
+      - choro-network
+
+  # Visualization
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - 3000:3000
+    volumes:
+      - ../observability/grafana-datasources.yml:/etc/grafana/provisioning/datasources/datasources.yaml
+    env_file:
+      - path: .env.grafana
+        required: true
+    depends_on:
+      - loki
+    restart: unless-stopped
+    networks:
+      - choro-network
+
+networks:
+  choro-network:
+    external: true

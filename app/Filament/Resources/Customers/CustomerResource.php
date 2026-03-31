@@ -25,6 +25,8 @@ class CustomerResource extends Resource
 
     protected static string|UnitEnum|null $navigationGroup = 'Workshop Operations';
 
+    protected static ?int $navigationSort = 1;
+
     public static function form(Schema $schema): Schema
     {
         return CustomerForm::configure($schema);

@@ -8,10 +8,8 @@ use App\Filament\Resources\Vehicles\Pages\ListVehicles;
 use App\Filament\Resources\Vehicles\Schemas\VehicleForm;
 use App\Filament\Resources\Vehicles\Tables\VehiclesTable;
 use App\Models\Vehicle;
-use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use UnitEnum;
 
@@ -19,11 +17,11 @@ class VehicleResource extends Resource
 {
     protected static ?string $model = Vehicle::class;
 
-    // protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
-
     protected static ?string $recordTitleAttribute = 'id';
 
     protected static string|UnitEnum|null $navigationGroup = 'Workshop Operations';
+
+    protected static ?int $navigationSort = 2;
 
     public static function form(Schema $schema): Schema
     {

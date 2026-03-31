@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\JobCardStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -36,6 +37,7 @@ class JobCard extends Model
             'customer_id' => 'integer',
             'vehicle_id' => 'integer',
             'total' => 'decimal:2',
+            'status' => JobCardStatus::class,
         ];
     }
 

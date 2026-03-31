@@ -30,8 +30,12 @@ class AppPanelProvider extends PanelProvider
             ->id('app')
             ->path('/')
             ->login()
+            ->brandName('Just \'n Durch')
+            ->brandLogo(asset('/logo-light.png'))
+            ->darkModeBrandLogo(asset('/logo-dark.png'))
+            ->brandLogoHeight('4rem')
             ->colors([
-                'primary' => Color::Indigo,
+                'primary' => Color::Teal,
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')

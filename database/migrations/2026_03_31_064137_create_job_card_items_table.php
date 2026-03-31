@@ -15,12 +15,12 @@ return new class extends Migration
 
         Schema::create('job_card_items', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('job_card_id')->constrained('jobcards');
+            $table->foreignId('job_card_id')->constrained('job_cards');
             $table->string('type', 20);
             $table->foreignId('service_id')->nullable()->constrained();
             $table->foreignId('part_id')->nullable()->constrained();
             $table->foreignId('employee_id')->nullable()->constrained();
-            $table->decimal('buying_price', 8, 2);
+            $table->decimal('buying_price', 8, 2)->default(0);
             $table->decimal('selling_price', 8, 2);
             $table->unsignedInteger('quantity');
             $table->decimal('sub_total', 8, 2);

@@ -30,10 +30,6 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@gmail.com',
         ]);
 
-        Customer::factory()
-            ->count(20)
-            ->create();
-
         Employee::factory()
             ->count(20)
             ->create();
@@ -60,8 +56,9 @@ class DatabaseSeeder extends Seeder
             $make->vehicleModels()->saveMany($models);
         }
 
-        Vehicle::factory()
-            ->count(50)
+        Customer::factory()
+            ->count(20)
+            ->has(Vehicle::factory()->count(3))
             ->create();
     }
 

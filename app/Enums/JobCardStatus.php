@@ -2,7 +2,10 @@
 
 namespace App\Enums;
 
-enum JobCardStatus: string
+use Filament\Support\Contracts\HasColor;
+use Filament\Support\Contracts\HasLabel;
+
+enum JobCardStatus: string implements HasColor, HasLabel
 {
     case Pending = 'pending';
     case Inspected = 'inspected';
@@ -13,7 +16,7 @@ enum JobCardStatus: string
     case Cancelled = 'cancelled';
     case Closed = 'closed';
 
-    public function label(): string
+    public function getLabel(): string
     {
         return match ($this) {
             self::Pending => 'Pending',
@@ -41,17 +44,17 @@ enum JobCardStatus: string
         };
     }
 
-    public function color(): string
+    public function getColor(): string
     {
         return match ($this) {
-            self::Pending => 'slate',
+            self::Pending => 'gray',
             self::Inspected => 'indigo',
-            self::AwaitingApproval => 'amber',
+            self::AwaitingApproval => 'warning',
             self::InProgress => 'blue',
-            self::AwaitingParts => 'rose',
+            self::AwaitingParts => 'warning',
             self::Completed => 'emerald',
-            self::Cancelled => 'red',
-            self::Closed => 'zinc',
+            self::Cancelled => 'danger',
+            self::Closed => 'success',
         };
     }
 }

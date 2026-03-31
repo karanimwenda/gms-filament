@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\JobCardItemType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -36,6 +37,7 @@ class JobCardItem extends Model
     {
         return [
             'id' => 'integer',
+            'type' => JobCardItemType::class,
             'job_card_id' => 'integer',
             'service_id' => 'integer',
             'part_id' => 'integer',

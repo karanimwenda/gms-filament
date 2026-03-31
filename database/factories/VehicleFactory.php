@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\Customer;
 use App\Models\FuelType;
 use App\Models\VehicleMake;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -15,7 +14,6 @@ class VehicleFactory extends Factory
     public function definition(): array
     {
         return [
-            'customer_id' => Customer::query()->inRandomOrder()->first(),
             'vehicle_make_id' => $make = VehicleMake::query()->inRandomOrder()->first(),
             'vehicle_model_id' => $make->vehicleModels()->inRandomOrder()->first(),
             'fuel_type_id' => FuelType::query()->inRandomOrder()->first(),

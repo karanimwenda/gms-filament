@@ -8,4 +8,11 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateJobCard extends CreateRecord
 {
     protected static string $resource = JobCardResource::class;
+
+    protected function mutateFormDataBeforeCreate(array $data): array
+    {
+        $data['total'] = 0;
+
+        return $data;
+    }
 }

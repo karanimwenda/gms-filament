@@ -8,6 +8,7 @@ use App\Models\FuelType;
 use App\Models\Part;
 use App\Models\Service;
 use App\Models\User;
+use App\Models\Vehicle;
 use App\Models\VehicleMake;
 use App\Models\VehicleModel;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -58,6 +59,10 @@ class DatabaseSeeder extends Seeder
 
             $make->vehicleModels()->saveMany($models);
         }
+
+        Vehicle::factory()
+            ->count(50)
+            ->create();
     }
 
     public array $fuelTypes = [

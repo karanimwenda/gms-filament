@@ -8,17 +8,16 @@ use App\Filament\Resources\FuelTypes\Pages\ListFuelTypes;
 use App\Filament\Resources\FuelTypes\Schemas\FuelTypeForm;
 use App\Filament\Resources\FuelTypes\Tables\FuelTypesTable;
 use App\Models\FuelType;
-use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class FuelTypeResource extends Resource
 {
     protected static ?string $model = FuelType::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|UnitEnum|null $navigationGroup = 'Settings';
 
     public static function form(Schema $schema): Schema
     {

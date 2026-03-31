@@ -8,17 +8,16 @@ use App\Filament\Resources\Parts\Pages\ListParts;
 use App\Filament\Resources\Parts\Schemas\PartForm;
 use App\Filament\Resources\Parts\Tables\PartsTable;
 use App\Models\Part;
-use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class PartResource extends Resource
 {
     protected static ?string $model = Part::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|UnitEnum|null $navigationGroup = 'Inventory';
 
     protected static ?string $recordTitleAttribute = 'name';
 

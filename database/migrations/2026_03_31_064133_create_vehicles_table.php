@@ -16,9 +16,9 @@ return new class extends Migration
         Schema::create('vehicles', function (Blueprint $table) {
             $table->id();
             $table->foreignId('customer_id')->constrained();
-            $table->foreignId('vehicle_make_id')->constrained('vehiclemakes');
-            $table->foreignId('vehicle_model_id')->constrained('vehiclemodels');
-            $table->foreignId('fuel_type_id')->constrained('fueltypes');
+            $table->foreignId('vehicle_make_id')->constrained('vehicle_makes');
+            $table->foreignId('vehicle_model_id')->constrained('vehicle_models');
+            $table->foreignId('fuel_type_id')->constrained('fuel_types');
             $table->string('number_plate', 20)->unique();
             $table->unsignedTinyInteger('number_of_gears')->nullable();
             $table->unsignedSmallInteger('year_of_manufacturing')->nullable();

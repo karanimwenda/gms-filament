@@ -8,17 +8,16 @@ use App\Filament\Resources\VehicleMakes\Pages\ListVehicleMakes;
 use App\Filament\Resources\VehicleMakes\Schemas\VehicleMakeForm;
 use App\Filament\Resources\VehicleMakes\Tables\VehicleMakesTable;
 use App\Models\VehicleMake;
-use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class VehicleMakeResource extends Resource
 {
     protected static ?string $model = VehicleMake::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|UnitEnum|null $navigationGroup = 'Settings';
 
     public static function form(Schema $schema): Schema
     {

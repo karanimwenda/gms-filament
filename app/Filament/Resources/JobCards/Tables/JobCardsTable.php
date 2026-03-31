@@ -15,12 +15,14 @@ class JobCardsTable
     {
         return $table
             ->columns([
-                TextColumn::make('customer.id')
+                TextColumn::make('id')
                     ->searchable(),
-                TextColumn::make('vehicle.id')
+                TextColumn::make('customer.email')
+                    ->searchable(),
+                TextColumn::make('vehicle.number_plate')
                     ->searchable(),
                 TextColumn::make('total')
-                    ->numeric()
+                    ->money('KSH')
                     ->sortable(),
                 TextColumn::make('status')
                     ->badge()

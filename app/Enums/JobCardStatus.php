@@ -30,7 +30,7 @@ enum JobCardStatus: string implements HasColor, HasLabel
         };
     }
 
-    public function description(): string
+    public function getDescription(): string
     {
         return match ($this) {
             self::Pending => 'The vehicle has been received and is queued for initial assessment.',
@@ -48,11 +48,11 @@ enum JobCardStatus: string implements HasColor, HasLabel
     {
         return match ($this) {
             self::Pending => 'gray',
-            self::Inspected => 'indigo',
+            self::Inspected => 'info',
             self::AwaitingApproval => 'warning',
-            self::InProgress => 'blue',
+            self::InProgress => 'info',
             self::AwaitingParts => 'warning',
-            self::Completed => 'emerald',
+            self::Completed => 'info',
             self::Cancelled => 'danger',
             self::Closed => 'success',
         };

@@ -60,4 +60,11 @@ class JobCard extends Model
     {
         return $this->hasMany(JobCardStatus::class);
     }
+
+    public function updateTotals(): void
+    {
+        $this->update([
+            'total' => $this->jobCardItems()->sum('sub_total'),
+        ]);
+    }
 }

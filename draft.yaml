@@ -1,0 +1,87 @@
+models:
+  Employee:
+    first_name: string:50
+    last_name: string:50
+    email: string:100
+    phone_number: string:20
+
+  Customer:
+    first_name: string:50
+    last_name: string:50
+    email: string:100
+    phone_number: string:20
+    relationships:
+      hasMany: Vehicle
+
+  VehicleMake:
+    name: string:50
+    relationships:
+      hasMany: VehicleModel
+
+  VehicleModel:
+    name: string:50
+    vehicle_make_id: foreign:vehicle_makes
+    relationships:
+      belongsTo: VehicleMake
+
+  FuelType:
+    name: string:20
+
+  Vehicle:
+    customer_id: foreign:customers
+    vehicle_make_id: foreign:vehicle_makes
+    vehicle_model_id: foreign:vehicle_models
+    fuel_type_id: foreign:fuel_types
+    number_plate: string:20 unique
+    number_of_gears: unsignedTinyInteger nullable
+    year_of_manufacturing: unsignedSmallInteger nullable
+    odometer_reading: unsignedInteger nullable
+    gearbox_number: string:50 nullable
+    engine_number: string:50 nullable
+    chassis_number: string:50 nullable
+    description: text nullable
+    relationships:
+      belongsTo: Customer,FuelType,VehicleMake,VehicleModel
+
+  Service:
+    name: string
+    description: text nullable
+    selling_price: decimal:8,2
+
+  Part:
+    name: string
+    description: text nullable
+    buying_price: decimal:8,2
+    selling_price: decimal:8,2
+    quantity_in_stock: unsignedInteger
+
+  JobCard:
+    customer_id: foreign:customers
+    vehicle_id: foreign:vehicles
+    total: decimal:14,2
+    status: string:20
+    notes: text nullable
+    relationships:
+      belongsTo: Customer,Vehicle
+      hasMany: JobCardItem,JobCardStatus
+
+  JobCardItem:
+    job_card_id: foreign:job_cards
+    type: string:20
+    service_id: foreign:services nullable
+    part_id: foreign:parts nullable
+    employee_id: foreign:employees nullable
+    buying_price: decimal:8,2
+    selling_price: decimal:8,2
+    quantity: unsignedInteger
+    sub_total: decimal:8,2
+    relationships:
+      belongsTo: JobCard,Service,Employee,Part
+
+  JobCardStatus:
+    job_card_id: foreign:job_cards
+    status: string:20
+    changed_by_id: foreign:users.id
+    notes: text nullable
+    relationships:
+      belongsTo: JobCard

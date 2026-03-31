@@ -6,6 +6,7 @@ use App\Enums\JobCardItemType;
 use App\Enums\JobCardStatus;
 use App\Models\Part;
 use App\Models\Service;
+use Filament\Actions\Action;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -132,7 +133,7 @@ class JobCardForm
 
                                 $item = $get('');
 
-                                $sellingPrice = self::getSellingPriceForItem($item);
+                                $sellingPrice = self::getBillableFromItem($item)?->selling_price ?? 0.0;
 
                                 $set('sub_total', $sellingPrice * $state);
                                 self::updateTotals($get, $set, '../', '../../total');
@@ -149,13 +150,28 @@ class JobCardForm
                             ->mask(RawJs::make('$money($input)')),
                     ])
                     ->mutateRelationshipDataBeforeCreateUsing(function (array $data): array {
-                        $sellingPrice = self::getSellingPriceForItem($data);
+                        $billable = self::getBillableFromItem($data);
+                        $data['buying_price'] = $billable?->buying_price ?? 0.0;
+                        $data['selling_price'] = $sellingPrice = $billable?->selling_price ?? 0.0;
+                        $data['sub_total'] = $sellingPrice * intval($data['quantity']);
+
+                        return $data;
+                    })
+                    ->mutateRelationshipDataBeforeSaveUsing(function (array $data): array {
+                        $billable = self::getBillableFromItem($data);
+                        $data['buying_price'] = $billable?->buying_price ?? 0.0;
+                        $data['selling_price'] = $sellingPrice = $billable?->selling_price ?? 0.0;
                         $data['sub_total'] = $sellingPrice * intval($data['quantity']);
 
                         return $data;
                     })
                     ->afterStateUpdated(function (Get $get, Set $set) {
                         self::updateTotals($get, $set);
+                    })
+                    ->deleteAction(function (Action $action) {
+                        return $action->after(function (Get $get, Set $set) {
+                            self::updateTotals($get, $set);
+                        });
                     }),
                 Section::make()
                     ->columnSpanFull()
@@ -181,7 +197,7 @@ class JobCardForm
         $set('sub_total', null);
     }
 
-    public static function updateTotals(Get $get, Set $set, string $itemsPath = 'jobCardItems', string $totalPath = '../../total'): void
+    public static function updateTotals(Get $get, Set $set, string $itemsPath = 'jobCardItems', string $totalPath = 'total'): void
     {
         // {'item-uuid': {...}, 'item-uuid2': {...}}
         $items = $get($itemsPath);
@@ -195,7 +211,7 @@ class JobCardForm
 
             $quantity = intval($item['quantity']);
 
-            $sellingPrice = self::getSellingPriceForItem($item);
+            $sellingPrice = self::getBillableFromItem($item)?->selling_price ?? 0.0;
 
             $total += $sellingPrice * $quantity;
         }
@@ -203,7 +219,7 @@ class JobCardForm
         $set($totalPath, $total);
     }
 
-    public static function getSellingPriceForItem(array $item): float
+    public static function getBillableFromItem(array $item): Part|Service|null
     {
         /** @var JobCardItemType */
         $type = $item['type'] instanceof JobCardItemType
@@ -213,17 +229,17 @@ class JobCardForm
         $partId = $item['part_id'] ?? null;
 
         if ($type == JobCardItemType::Service && empty($serviceId)) {
-            return 0.0;
+            return null;
         }
 
         if ($type == JobCardItemType::Part && empty($partId)) {
-            return 0.0;
+            return null;
         }
 
-        $sellingPrice = $type == JobCardItemType::Part
-            ? Part::query()->findOrFail($partId)->selling_price
-            : Service::query()->findOrFail($serviceId)->selling_price;
+        $billable = $type == JobCardItemType::Part
+            ? Part::query()->findOrFail($partId)
+            : Service::query()->findOrFail($serviceId);
 
-        return $sellingPrice;
+        return $billable;
     }
 }

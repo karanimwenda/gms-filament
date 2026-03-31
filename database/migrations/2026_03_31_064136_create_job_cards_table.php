@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('customer_id')->constrained();
             $table->foreignId('vehicle_id')->constrained();
-            $table->decimal('total', 14, 2);
+            $table->decimal('total', 14, 2)->default(0);
             $table->string('status', 20);
             $table->text('notes')->nullable();
             $table->timestamps();

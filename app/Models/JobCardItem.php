@@ -42,11 +42,36 @@ class JobCardItem extends Model
             'service_id' => 'integer',
             'part_id' => 'integer',
             'employee_id' => 'integer',
-            'buying_price' => 'decimal:2',
-            'selling_price' => 'decimal:2',
+            // 'buying_price' => 'decimal:2',
+            // 'selling_price' => 'decimal:2',
             'quantity' => 'integer',
             'sub_total' => 'decimal:2',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::created(function (self $item) {
+            $jobCard = $item->jobCard;
+            $jobCard->update([
+                'total' => $jobCard->jobCardItems()->sum('sub_total'),
+            ]);
+            info(__METHOD__, compact('item'));
+        });
+        static::updated(function (self $item) {
+            $jobCard = $item->jobCard;
+            $jobCard->update([
+                'total' => $jobCard->jobCardItems()->sum('sub_total'),
+            ]);
+            info(__METHOD__, compact('item'));
+        });
+        static::deleted(function (self $item) {
+            $jobCard = JobCard::query()->find($item->job_card_id);
+            $jobCard->update([
+                'total' => $jobCard->jobCardItems()->sum('sub_total'),
+            ]);
+            info(__METHOD__, compact('item'));
+        });
     }
 
     public function jobCard(): BelongsTo

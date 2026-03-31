@@ -18,4 +18,13 @@ class EditJobCard extends EditRecord
             DeleteAction::make(),
         ];
     }
+
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        if (array_key_exists('total', $data)) {
+            unset($data['total']);
+        }
+
+        return $data;
+    }
 }

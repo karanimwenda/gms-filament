@@ -11,7 +11,9 @@ class CreateJobCard extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        $data['total'] = 0;
+        if (array_key_exists('total', $data)) {
+            unset($data['total']);
+        }
 
         return $data;
     }

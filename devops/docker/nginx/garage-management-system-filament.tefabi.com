@@ -2,11 +2,8 @@ server {
     listen 80;
     server_name garage-managment-system-filament.tefabi.com;
 
-    root /var/www/html;
-    index index.html index.htm index.nginx-debian.html;
-
     location / {
-            proxy_pass http://localhost:3180;
+            proxy_pass http://localhost:4080;
             proxy_http_version 1.1;
             proxy_set_header Upgrade $http_upgrade;
             proxy_set_header Connection 'upgrade';

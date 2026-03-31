@@ -17,6 +17,8 @@ services:
         user: www-data
       - command: php /opt/apps/www/artisan optimize
         user: www-data
+      - command: php /opt/apps/www/artisan filament:optimize
+        user: www-data
 
   # Run the web server container for static content, and proxying to our FPM container
   gms.filament.web:
